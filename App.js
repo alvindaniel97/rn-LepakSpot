@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -23,12 +22,13 @@ export default function App() {
           <Stack.Navigator screenOptions={screenOptions}>
             {user ? (
               <>
-                <Stack.Screen name="Home" component={HomeScreen} />{" "}
+                {/* <Stack.Screen name="Home" component={HomeScreen} />{" "} */}
               </>
             ) : (
               <>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="Register" component={RegistrationScreen} />
+                <Stack.Screen name="Home" component={HomeScreen} />
               </>
             )}
           </Stack.Navigator>

@@ -10,6 +10,8 @@ import {
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { authentication } from "../firebase";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -18,18 +20,17 @@ const LoginScreen = () => {
   const ref_input_password = useRef();
 
   const loginUser = () => {
-    // signInWithEmailAndPassword(authentication, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     navigation.navigate("Dashboard");
-    //     const user = userCredential.user;
-    //     console.log("user", user);
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //   });
+    signInWithEmailAndPassword(authentication, email, password)
+      .then((userCredential) => {
+        // Signed in
+        navigation.navigate("Home");
+        //const user = userCredential.user;
+        //console.log("user", user);
+        // ...
+      })
+      .catch((error) => {
+        console.log("Error signing in. ", error);
+      });
   };
 
   return (

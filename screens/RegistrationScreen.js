@@ -3,6 +3,8 @@ import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { authentication } from "../firebase";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
@@ -11,15 +13,19 @@ const RegistrationScreen = () => {
   const navigation = useNavigation();
 
   const registerUser = () => {
-    // createUserWithEmailAndPassword(authentication, email, password)
-    //   .then((result) => {
-    //     console.log("re", result);
-    //     setIsSignedIn(true);
-    //     navigation.navigate("Profile");
-    //   })
-    //   .catch((result) => {
-    //     console.log("failed", result);
-    //   });
+    createUserWithEmailAndPassword(authentication, email, password)
+      .then(() => {
+        signOut(authentication)
+          .then(() => {
+            navigation.navigate("Login");
+          })
+          .catch((error) => {
+            console.log("Error signing out upon account creation. ", error);
+          });
+      })
+      .catch((result) => {
+        console.log("Error registering user. ", result);
+      });
   };
   return (
     <SafeAreaView className="p-2">
