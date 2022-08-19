@@ -6,6 +6,8 @@ import LoginScreen from "./screens/LoginScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TailwindProvider } from "tailwindcss-react-native";
+import Toast from "react-native-toast-message";
+import useToastConfig from "./hooks/useToastConfig";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +16,7 @@ const screenOptions = {
 };
 
 export default function App() {
+  const toastConfig = useToastConfig();
   const user = false;
   return (
     <NavigationContainer>
@@ -33,6 +36,7 @@ export default function App() {
             )}
           </Stack.Navigator>
         </SafeAreaProvider>
+        <Toast config={toastConfig} />
       </TailwindProvider>
     </NavigationContainer>
   );

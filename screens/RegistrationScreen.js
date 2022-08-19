@@ -1,10 +1,12 @@
-import { View, Text, TouchableOpacity, TextInput, Button } from "react-native";
+import { View, Text, TouchableOpacity, Button } from "react-native";
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { authentication } from "../firebase";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import Toast from "react-native-toast-message";
+import { TextInput } from 'react-native-paper';
 
 const RegistrationScreen = () => {
   const [email, setEmail] = useState("");
@@ -18,17 +20,41 @@ const RegistrationScreen = () => {
         signOut(authentication)
           .then(() => {
             navigation.navigate("Login");
+            Toast.show({
+              type: "success",
+              text1: `Registration is successful`,
+              text2: "Please login with your credentials",
+              visibilityTime: 2000,
+              position: "bottom",
+              bottomOffset: 20,
+            });
           })
           .catch((error) => {
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Something went wrong",
+              visibilityTime: 2000,
+              position: "bottom",
+              bottomOffset: 20,
+            });
             console.log("Error signing out upon account creation. ", error);
           });
       })
       .catch((result) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Something went wrong",
+          visibilityTime: 2000,
+          position: "bottom",
+          bottomOffset: 20,
+        });
         console.log("Error registering user. ", result);
       });
   };
   return (
-    <SafeAreaView className="p-2">
+    <SafeAreaView className="p-2 bg-white flex-1">
       <View>
         <View className="flex-row items-center justify-between">
           <TouchableOpacity onPress={navigation.goBack}>
@@ -40,8 +66,11 @@ const RegistrationScreen = () => {
       </View>
       <View className="p-2 pt-10 space-y-2">
         <TextInput
-          className="p-2 border-solid border-2 border-gray-500"
-          placeholder="Email"
+          className='bg-white'
+          mode="outlined"
+          outlineColor='grey'
+          activeOutlineColor="orange"
+          label="Email"
           keyboardType="email-address"
           autoCapitalize="none"
           returnKeyType="next"
@@ -51,8 +80,11 @@ const RegistrationScreen = () => {
           blurOnSubmit={false}
         />
         <TextInput
-          className="p-2 border-solid border-2 border-gray-500"
-          placeholder="Password"
+          className='bg-white'
+          mode="outlined"
+          outlineColor='grey'
+          activeOutlineColor="orange"
+          label="Password"
           autoCapitalize="none"
           secureTextEntry={true}
           value={password}
