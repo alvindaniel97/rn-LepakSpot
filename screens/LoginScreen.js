@@ -9,46 +9,15 @@ import {
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { authentication } from "../firebase";
-import Toast from "react-native-toast-message";
-import { TextInput } from 'react-native-paper';
+import { TextInput } from "react-native-paper";
+import useAuth from "../hooks/useAuth";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { signInUser } = useAuth();
   const navigation = useNavigation();
   const ref_input_password = useRef();
-
-  const loginUser = () => {
-    signInWithEmailAndPassword(authentication, email, password)
-      .then((userCredential) => {
-        // Signed in
-        Toast.show({
-          type: "success",
-          text1: `Hi ${userCredential.user.email}`,
-          text2: "Welcome to Lepak Spot 👋",
-          visibilityTime: 2000,
-          position: "bottom",
-          bottomOffset: 20,
-        });
-        navigation.navigate("Home");
-        //const user = userCredential.user;
-        //console.log("user", user);
-        // ...
-      })
-      .catch((error) => {
-        Toast.show({
-          type: "error",
-          text1: "Error logging in",
-          text2: "Something went wrong",
-          visibilityTime: 2000,
-          position: "bottom",
-          bottomOffset: 20,
-        });
-        console.log("Error signing in. ", error);
-      });
-  };
 
   return (
     <SafeAreaView className="bg-white flex-1 ">
@@ -63,7 +32,7 @@ const LoginScreen = () => {
 
           <View className="pt-14 space-y-2">
             <TextInput
-              className='bg-white'
+              className="bg-white"
               mode="outlined"
               label="Email"
               keyboardType="email-address"
@@ -73,11 +42,11 @@ const LoginScreen = () => {
               onChangeText={(text) => setEmail(text)}
               onSubmitEditing={() => ref_input_password.current.focus()}
               blurOnSubmit={false}
-              outlineColor='grey'
+              outlineColor="grey"
               activeOutlineColor="orange"
             />
             <TextInput
-              className='bg-white'
+              className="bg-white"
               mode="outlined"
               label="Password"
               autoCapitalize="none"
@@ -101,7 +70,11 @@ const LoginScreen = () => {
           </View>
 
           <View className="pt-14">
-            <Button color="#FFA500" title="Login" onPress={loginUser} />
+            <Button
+              color="#FFA500"
+              title="Login"
+              onPress={() => signInUser(email, password)}
+            />
           </View>
         </View>
       </ScrollView>
