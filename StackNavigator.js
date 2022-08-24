@@ -7,14 +7,14 @@ import RegistrationScreen from "./screens/RegistrationScreen";
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
-  const { user } = useAuth();
+  const { user, registrationBuffer } = useAuth();
   const screenOptions = {
     headerShown: false,
   };
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {user ? (
+      {user && !registrationBuffer ? (
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
         </>

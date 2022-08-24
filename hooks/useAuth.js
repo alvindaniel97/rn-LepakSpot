@@ -1,4 +1,5 @@
 import {
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -10,15 +11,16 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { authentication } from "../firebase";
+import { authentication, firestore } from "../firebase";
 import Toast from "react-native-toast-message";
+import { addDoc, collection } from "firebase/firestore";
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loadingInitial, setLoadingInitial] = useState(true);
-
+  const [registrationBuffer, setRegistrationBuffer] = useState(false);
   useEffect(
     () =>
       onAuthStateChanged(authentication, (user) => {
@@ -34,6 +36,54 @@ export const AuthProvider = ({ children }) => {
       }),
     []
   );
+
+  const registerUser = async (firstName, lastName, email, password) => {
+    await createUserWithEmailAndPassword(authentication, email, password)
+      .then(() => {
+        setRegistrationBuffer(true);
+        signOut(authentication)
+          .then(() => {
+            addDoc(collection(firestore, "users"), {
+              firstName: firstName,
+              lastName: lastName,
+              email: email,
+              password: password,
+            }).then(() => {
+              setRegistrationBuffer(false);
+              Toast.show({
+                type: "success",
+                text1: `Registration is successful`,
+                text2: "Please login with your credentials",
+                visibilityTime: 2000,
+                position: "bottom",
+                bottomOffset: 20,
+              });
+            });
+          })
+          .catch((error) => {
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Something went wrong",
+              visibilityTime: 2000,
+              position: "bottom",
+              bottomOffset: 20,
+            });
+            console.log("Error signing out upon account creation. ", error);
+          });
+      })
+      .catch((error) => {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Something went wrong",
+          visibilityTime: 2000,
+          position: "bottom",
+          bottomOffset: 20,
+        });
+        console.log("Error registering user. ", error);
+      });
+  };
 
   const signInUser = async (email, password) => {
     await signInWithEmailAndPassword(authentication, email, password)
@@ -75,10 +125,12 @@ export const AuthProvider = ({ children }) => {
   const memoedValue = useMemo(
     () => ({
       user,
+      registrationBuffer,
+      registerUser,
       signInUser,
       logoutUser,
     }),
-    [user]
+    [user, registrationBuffer]
   );
 
   return (

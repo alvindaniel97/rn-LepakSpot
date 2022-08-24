@@ -3,56 +3,20 @@ import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { authentication } from "../firebase";
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import Toast from "react-native-toast-message";
-import { TextInput } from 'react-native-paper';
+import { TextInput } from "react-native-paper";
+import useAuth from "../hooks/useAuth";
 
 const RegistrationScreen = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const ref_input_last_name = useRef();
+  const ref_input_email = useRef();
   const ref_input_password = useRef();
   const navigation = useNavigation();
+  const { registerUser } = useAuth();
 
-  const registerUser = () => {
-    createUserWithEmailAndPassword(authentication, email, password)
-      .then(() => {
-        signOut(authentication)
-          .then(() => {
-            navigation.navigate("Login");
-            Toast.show({
-              type: "success",
-              text1: `Registration is successful`,
-              text2: "Please login with your credentials",
-              visibilityTime: 2000,
-              position: "bottom",
-              bottomOffset: 20,
-            });
-          })
-          .catch((error) => {
-            Toast.show({
-              type: "error",
-              text1: "Error",
-              text2: "Something went wrong",
-              visibilityTime: 2000,
-              position: "bottom",
-              bottomOffset: 20,
-            });
-            console.log("Error signing out upon account creation. ", error);
-          });
-      })
-      .catch((result) => {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "Something went wrong",
-          visibilityTime: 2000,
-          position: "bottom",
-          bottomOffset: 20,
-        });
-        console.log("Error registering user. ", result);
-      });
-  };
   return (
     <SafeAreaView className="p-2 bg-white flex-1">
       <View>
@@ -64,36 +28,78 @@ const RegistrationScreen = () => {
           <View></View>
         </View>
       </View>
-      <View className="p-2 pt-10 space-y-2">
-        <TextInput
-          className='bg-white'
-          mode="outlined"
-          outlineColor='grey'
-          activeOutlineColor="orange"
-          label="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          returnKeyType="next"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          onSubmitEditing={() => ref_input_password.current.focus()}
-          blurOnSubmit={false}
-        />
-        <TextInput
-          className='bg-white'
-          mode="outlined"
-          outlineColor='grey'
-          activeOutlineColor="orange"
-          label="Password"
-          autoCapitalize="none"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          ref={ref_input_password}
-        />
-      </View>
-      <View className="pt-14">
-        <Button color="#FFA500" title="Register" onPress={registerUser} />
+      <View className="p-2 pt-10 space-y-4">
+        <View className="flex-row space-x-4">
+          <View className="flex-1 w-full">
+            <TextInput
+              className="bg-white"
+              mode="outlined"
+              outlineColor="grey"
+              activeOutlineColor="orange"
+              label="First Name"
+              keyboardType="default"
+              returnKeyType="next"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              onSubmitEditing={() => ref_input_last_name.current.focus()}
+              blurOnSubmit={false}
+            />
+          </View>
+          <View className="flex-1 w-full">
+            <TextInput
+              className="bg-white"
+              mode="outlined"
+              outlineColor="grey"
+              activeOutlineColor="orange"
+              label="Last Name"
+              keyboardType="default"
+              returnKeyType="next"
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              ref={ref_input_last_name}
+              onSubmitEditing={() => ref_input_email.current.focus()}
+              blurOnSubmit={false}
+            />
+          </View>
+        </View>
+        <View className="flex-1 w-full">
+          <TextInput
+            className="bg-white"
+            mode="outlined"
+            outlineColor="grey"
+            activeOutlineColor="orange"
+            label="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            returnKeyType="next"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            ref={ref_input_email}
+            onSubmitEditing={() => ref_input_password.current.focus()}
+            blurOnSubmit={false}
+          />
+        </View>
+        <View className="flex-1 w-full">
+          <TextInput
+            className="bg-white"
+            mode="outlined"
+            outlineColor="grey"
+            activeOutlineColor="orange"
+            label="Password"
+            autoCapitalize="none"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            ref={ref_input_password}
+          />
+        </View>
+        <View className="pt-10">
+          <Button
+            color="#FFA500"
+            title="Register"
+            onPress={() => registerUser(firstName, lastName, email, password)}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
