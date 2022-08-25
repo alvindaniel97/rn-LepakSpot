@@ -224,7 +224,9 @@ const RegistrationScreen = () => {
           <Button
             color="#FFA500"
             title="Register"
-            onPress={() => registerUser(firstName, lastName, email, password)}
+            onPress={() =>
+              registerUser(firstName, lastName, email, password, selectedImage)
+            }
           />
         </View>
       </View>
