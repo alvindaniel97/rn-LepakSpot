@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -10,16 +11,16 @@ import StackNavigator from "./StackNavigator";
 export default function App() {
   const toastConfig = useToastConfig();
   return (
-    <NavigationContainer>
-      <TailwindProvider>
-        <SafeAreaProvider>
-          <AuthProvider>
+    <TailwindProvider>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <NavigationContainer>
             <StackNavigator />
-          </AuthProvider>
-        </SafeAreaProvider>
-        <Toast config={toastConfig} />
-      </TailwindProvider>
-    </NavigationContainer>
+          </NavigationContainer>
+        </AuthProvider>
+      </SafeAreaProvider>
+      <Toast config={toastConfig} />
+    </TailwindProvider>
   );
 }
 

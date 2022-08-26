@@ -1,12 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import useAuth from "./hooks/useAuth";
-import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
+import DrawerNavigator from "./DrawerNavigator";
 
-const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
+  const Stack = createNativeStackNavigator();
   const { user, registrationBuffer } = useAuth();
   const screenOptions = {
     headerShown: false,
@@ -16,7 +16,8 @@ const StackNavigator = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       {user && !registrationBuffer ? (
         <>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="HomeScreen" component={DrawerNavigator} />
+          <Stack.Screen name="ProfileScreen" component={DrawerNavigator} />
         </>
       ) : (
         <>

@@ -13,8 +13,9 @@ import React, {
 } from "react";
 import { authentication, firestore, storage } from "../firebase";
 import Toast from "react-native-toast-message";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
@@ -121,17 +122,36 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signInUser = async (email, password) => {
+    setRegistrationBuffer(true)
     await signInWithEmailAndPassword(authentication, email, password)
-      .then((userCredential) => {
-        // Signed in
-        Toast.show({
-          type: "success",
-          text1: `Hi ${userCredential.user.email}`,
-          text2: "Welcome to Lepak Spot 👋",
-          visibilityTime: 2000,
-          position: "bottom",
-          bottomOffset: 20,
-        });
+      .then(async (userCredential) => {
+        const userRef = doc(firestore, "users", userCredential.user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          try {
+            const userDetails = userSnap.data()
+            const jsonValue = JSON.stringify(userDetails);
+            await AsyncStorage.setItem("userDetails", jsonValue);
+            setRegistrationBuffer(false)
+          } catch (e) {
+            // saving error
+            console.log("Error saving user in AsyncStorage ", e);
+          }
+          // Signed in
+          Toast.show({
+            type: "success",
+            text1: `Hi ${userSnap.data().firstName} ${
+              userSnap.data().lastName
+            }`,
+            text2: "Welcome to Lepak Spot 👋",
+            visibilityTime: 2000,
+            position: "bottom",
+            bottomOffset: 20,
+          });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such user document!");
+        }
       })
       .catch((error) => {
         Toast.show({

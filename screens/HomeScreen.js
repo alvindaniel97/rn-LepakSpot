@@ -1,18 +1,38 @@
-import { View, Text, Button } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import useAuth from "../hooks/useAuth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Header from "../components/Header";
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = ({ navigation }) => {
+  //const navigation = useNavigation();
   const { user, logoutUser } = useAuth();
+  const [userDetails, setUserDetails] = useState({});
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  const getUserDetails = async () => {
+    try {
+      let jsonValue = await AsyncStorage.getItem("userDetails");
+      if (jsonValue != null) {
+        const userData = await JSON.parse(jsonValue);
+        setUserDetails(userData);
+      } else {
+        setUserDetails(null);
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
 
   return (
     <SafeAreaView>
       <View>
-        <Text className="text-red-500">Hi {user.email}</Text>
-        <Button title="Logout" onPress={logoutUser} />
+        <Header navigation={navigation} userDetails={userDetails} />
       </View>
     </SafeAreaView>
   );
