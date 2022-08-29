@@ -9,8 +9,8 @@ import {
 import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { TextInput } from "react-native-paper";
 import useAuth from "../hooks/useAuth";
+import { OutlinedTextField } from "rn-material-ui-textfield";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +20,7 @@ const LoginScreen = () => {
   const ref_input_password = useRef();
 
   return (
-    <SafeAreaView className="bg-white flex-1 ">
+    <SafeAreaView style={{ backgroundColor: "white" }} className=" flex-1 ">
       <ScrollView>
         <View className="p-10">
           <View className="pt-10 items-center">
@@ -30,32 +30,33 @@ const LoginScreen = () => {
             />
           </View>
 
-          <View className="pt-14 space-y-2">
-            <TextInput
-              className="bg-white"
-              mode="outlined"
-              label="Email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              returnKeyType="next"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              onSubmitEditing={() => ref_input_password.current.focus()}
-              blurOnSubmit={false}
-              outlineColor="grey"
-              activeOutlineColor="orange"
-            />
-            <TextInput
-              className="bg-white"
-              mode="outlined"
-              label="Password"
-              autoCapitalize="none"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              ref={ref_input_password}
-              activeOutlineColor="orange"
-            />
+          <View className="pt-14 space-y-4">
+            <View>
+              <OutlinedTextField
+                tintColor="orange"
+                mode="outlined"
+                label="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                returnKeyType="next"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                onSubmitEditing={() => ref_input_password.current.focus()}
+                blurOnSubmit={false}
+              />
+            </View>
+            <View>
+              <OutlinedTextField
+                tintColor="orange"
+                mode="outlined"
+                label="Password"
+                autoCapitalize="none"
+                secureTextEntry={true}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                ref={ref_input_password}
+              />
+            </View>
           </View>
 
           <View className="items-end pt-4">

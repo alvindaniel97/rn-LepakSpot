@@ -12,11 +12,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import { TextInput } from "react-native-paper";
 import useAuth from "../hooks/useAuth";
 import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { Menu, MenuItem, MenuDivider } from "react-native-material-menu";
+import { OutlinedTextField } from "rn-material-ui-textfield";
 
 const RegistrationScreen = () => {
   const [firstName, setFirstName] = useState("");
@@ -121,11 +121,9 @@ const RegistrationScreen = () => {
       <View className="p-2 pt-10 space-y-5">
         <View className="flex-row space-x-4">
           <View className="flex-1 w-full">
-            <TextInput
-              className="bg-white"
+            <OutlinedTextField
+              tintColor="orange"
               mode="outlined"
-              outlineColor="grey"
-              activeOutlineColor="orange"
               label="First Name"
               keyboardType="default"
               returnKeyType="next"
@@ -136,11 +134,9 @@ const RegistrationScreen = () => {
             />
           </View>
           <View className="flex-1 w-full">
-            <TextInput
-              className="bg-white"
+            <OutlinedTextField
               mode="outlined"
-              outlineColor="grey"
-              activeOutlineColor="orange"
+              tintColor="orange"
               label="Last Name"
               keyboardType="default"
               returnKeyType="next"
@@ -153,11 +149,9 @@ const RegistrationScreen = () => {
           </View>
         </View>
         <View className="flex-1 w-full">
-          <TextInput
-            className="bg-white"
+          <OutlinedTextField
+            tintColor="orange"
             mode="outlined"
-            outlineColor="grey"
-            activeOutlineColor="orange"
             label="Email"
             keyboardType="email-address"
             autoCapitalize="none"
@@ -170,11 +164,9 @@ const RegistrationScreen = () => {
           />
         </View>
         <View className="flex-1 w-full">
-          <TextInput
-            className="bg-white"
+          <OutlinedTextField
+            tintColor="orange"
             mode="outlined"
-            outlineColor="grey"
-            activeOutlineColor="orange"
             label="Password"
             autoCapitalize="none"
             secureTextEntry={true}

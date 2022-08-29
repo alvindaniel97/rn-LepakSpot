@@ -4,6 +4,7 @@ import useAuth from "./hooks/useAuth";
 import LoginScreen from "./screens/LoginScreen";
 import RegistrationScreen from "./screens/RegistrationScreen";
 import DrawerNavigator from "./DrawerNavigator";
+import NewSpotScreen from "./screens/NewSpotScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const StackNavigator = () => {
         <>
           <Stack.Screen name="HomeScreen" component={DrawerNavigator} />
           <Stack.Screen name="ProfileScreen" component={DrawerNavigator} />
+          <Stack.Screen name="NewSpotScreen" component={NewSpotScreen} />
         </>
       ) : (
         <>
