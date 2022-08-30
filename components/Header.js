@@ -10,12 +10,31 @@ const Header = ({ navigation, userDetails }) => {
           {userDetails.firstName} {userDetails.lastName}
         </Text>
       </View>
-      <TouchableOpacity className='border-solid border-2 border-white rounded-full' onPress={() => navigation.push("ProfileScreen", { screen: 'Profile' })}>
-        <Image
-          className="h-12 w-12 bg-gray-300 p-4 rounded-full "
-          source={{ uri: userDetails.profilePicture }}
-        />
-      </TouchableOpacity>
+
+      {userDetails.profilePicture !== null ? (
+        <>
+          <TouchableOpacity
+            className="border-solid border-2 border-white rounded-full"
+            onPress={() =>
+              navigation.push("ProfileScreen", { screen: "Profile" })
+            }
+          >
+            <Image
+              className="h-12 w-12 bg-gray-300 p-4 rounded-full "
+              source={{ uri: userDetails.profilePicture }}
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TouchableOpacity className="h-12 w-12 bg-gray-300 rounded-full justify-center">
+            <Text className="text-lg font-bold self-center text-black">
+              {userDetails?.firstName.charAt(0)}
+              {userDetails?.lastName.charAt(0)}
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };

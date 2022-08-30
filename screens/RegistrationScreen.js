@@ -109,6 +109,7 @@ const RegistrationScreen = () => {
 
   return (
     <SafeAreaView className="p-2 bg-white flex-1">
+      <StatusBar translucent={true} backgroundColor="#ffa31a" />
       <View>
         <View className="flex-row items-center justify-between">
           <TouchableOpacity onPress={navigation.goBack}>

@@ -50,51 +50,72 @@ export const AuthProvider = ({ children }) => {
         setRegistrationBuffer(true);
         signOut(authentication)
           .then(async () => {
-            const storageRef = ref(
-              storage,
-              `users/${userCredential.user.uid}/${userCredential.user.uid}.jpg`
-            );
+            if (selectedImage != null) {
+              const storageRef = ref(
+                storage,
+                `users/${userCredential.user.uid}/${userCredential.user.uid}.jpg`
+              );
 
-            //convert to blob
-            const blob = await new Promise((resolve, reject) => {
-              const xhr = new XMLHttpRequest();
-              xhr.onload = function () {
-                resolve(xhr.response);
-              };
-              xhr.onerror = function () {
-                reject(new TypeError("Network request failed"));
-              };
-              xhr.responseType = "blob";
-              xhr.open("GET", selectedImage.localUri, true);
-              xhr.send(null);
-            });
+              //convert to blob
+              const blob = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.onload = function () {
+                  resolve(xhr.response);
+                };
+                xhr.onerror = function () {
+                  reject(new TypeError("Network request failed"));
+                };
+                xhr.responseType = "blob";
+                xhr.open("GET", selectedImage.localUri, true);
+                xhr.send(null);
+              });
 
-            uploadBytes(storageRef, blob)
-              .then(() => {
-                getDownloadURL(ref(storage, storageRef)).then((url) => {
-                  setDoc(doc(firestore, "users", userCredential.user.uid), {
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: password,
-                    profilePicture: url,
-                    dateCreated: serverTimestamp(),
-                  }).then(() => {
-                    setRegistrationBuffer(false);
-                    Toast.show({
-                      type: "success",
-                      text1: `Registration is successful`,
-                      text2: "Please login with your credentials",
-                      visibilityTime: 2000,
-                      position: "bottom",
-                      bottomOffset: 20,
+              uploadBytes(storageRef, blob)
+                .then(() => {
+                  getDownloadURL(ref(storage, storageRef)).then((url) => {
+                    setDoc(doc(firestore, "users", userCredential.user.uid), {
+                      firstName: firstName,
+                      lastName: lastName,
+                      email: email,
+                      password: password,
+                      profilePicture: url,
+                      dateCreated: serverTimestamp(),
+                    }).then(() => {
+                      setRegistrationBuffer(false);
+                      Toast.show({
+                        type: "success",
+                        text1: `Registration is successful`,
+                        text2: "Please login with your credentials",
+                        visibilityTime: 2000,
+                        position: "bottom",
+                        bottomOffset: 20,
+                      });
                     });
                   });
+                })
+                .catch((err) => {
+                  console.log("Error uploading to storage ", err);
                 });
-              })
-              .catch((err) => {
-                console.log("Error uploading to storage ", err);
+            } else {
+              setDoc(doc(firestore, "users", userCredential.user.uid), {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password,
+                profilePicture: null,
+                dateCreated: serverTimestamp(),
+              }).then(() => {
+                setRegistrationBuffer(false);
+                Toast.show({
+                  type: "success",
+                  text1: `Registration is successful`,
+                  text2: "Please login with your credentials",
+                  visibilityTime: 2000,
+                  position: "bottom",
+                  bottomOffset: 20,
+                });
               });
+            }
           })
           .catch((error) => {
             Toast.show({
@@ -122,17 +143,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signInUser = async (email, password) => {
-    setRegistrationBuffer(true)
+    setRegistrationBuffer(true);
     await signInWithEmailAndPassword(authentication, email, password)
       .then(async (userCredential) => {
         const userRef = doc(firestore, "users", userCredential.user.uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
           try {
-            const userDetails = userSnap.data()
+            const userDetails = userSnap.data();
             const jsonValue = JSON.stringify(userDetails);
             await AsyncStorage.setItem("userDetails", jsonValue);
-            setRegistrationBuffer(false)
+            setRegistrationBuffer(false);
           } catch (e) {
             // saving error
             console.log("Error saving user in AsyncStorage ", e);
