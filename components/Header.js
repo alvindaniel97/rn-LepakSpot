@@ -27,7 +27,12 @@ const Header = ({ navigation, userDetails }) => {
         </>
       ) : (
         <>
-          <TouchableOpacity className="h-12 w-12 bg-gray-300 rounded-full justify-center">
+          <TouchableOpacity
+            className="h-12 w-12 bg-[#BFD7ED] rounded-full justify-center"
+            onPress={() =>
+              navigation.push("ProfileScreen", { screen: "Profile" })
+            }
+          >
             <Text className="text-lg font-bold self-center text-black">
               {userDetails?.firstName.charAt(0)}
               {userDetails?.lastName.charAt(0)}
